@@ -6,19 +6,19 @@ class NeuralNetwork:
             number_of_hidden_layer takes list of sizes of each hidden layer (i.e array of hidden Layer sizes)
             output_neurons takes list of output neurons (i.e Output Layer)
         """
-        self.layer1=np.array(input_neurons)
+        self.layer1=np.array(input_neurons)[np.newaxis].T
         self.layerH=self.generateHiddenLayers(number_of_hidden_layer)
-        self.layerN=np.array(output_neurons)
-        # np.random.seed(1)
-        self.weight=self.generateWeight([self.layer1,*self.layerH,self.layerN])
+        self.layerN=np.array(output_neurons)[np.newaxis].T
+        self.weight=self.generateWeight()
+        self.weight_shape=[i.shape for i in self.weight]
+        print(self.weight)
     
     def generateHiddenLayers(self,array_of_sizes:list[int]):
-        return np.array([np.zeros(size) for size in array_of_sizes])
+        return np.array([np.zeros(size)[np.newaxis].T for size in array_of_sizes])
 
-    def generateWeight(self,layers:list[list[int]]):
-        print(layers)
-        print(np.random.random((3,4)))
-        pass
+    def generateWeight(self,):
+        layer_size_array=[len(i) for i in [self.layer1,*self.layerH,self.layerN]]
+        return [2*np.random.random((layer_size_array[i+1],layer_size_array[i]))-1 for i in range(len(layer_size_array)-1)]
     
     def feedForward(self,):
         pass
@@ -34,11 +34,6 @@ class NeuralNetwork:
 if __name__=="__main__":
     test_nn= NeuralNetwork(
         number_of_hidden_layer=[3],
-        input_neurons=[
-            [0,0,1],
-            [1,1,1],
-            [1,0,1],
-            [0,1,1],
-        ],
+        input_neurons=[1,0,1,0,1,0,0,1,1,0,1,1,0,1],
         output_neurons=[0,1,1,0]
     )
