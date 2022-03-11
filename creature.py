@@ -6,9 +6,11 @@ class Creature:
         self.brain=nn()
         self.genome_length=genome_length
         self.genome=None
+        self.age=0
         # self.action_neuron=ActionNeurons()
         # self.input_sensor_neuron=Sens()
         # self.inner_neuron=
     
     def grow(self):
+        self.age+=1
         pass

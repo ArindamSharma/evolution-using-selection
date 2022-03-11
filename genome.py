@@ -1,5 +1,5 @@
-from logging import raiseExceptions
 from random import randint
+
 class Gene:
     """Gene Consist of 8 HexaDeciamal value
     here one Gene represent a connevtion of neuron"""
@@ -10,11 +10,13 @@ class Gene:
         if (gene==None):
             self.gene=""
             for i in range(self.size):
-                self.gene+=hex(randint(0,15))[2:]
+                self.gene+=Gene.randomHexaDecimalNumber()
         else:
             self.gene=self.geneVerify(gene)
 
-    def geneVerify(self,strgene):
+    def geneVerify(self,strgene:str)->str:
+        """Considering user wont pass char out of Hexadeciaml range """
+
         if(len(strgene)!=self.size):
             raise Exception("Invalid Gene :: length must be : "+str(Gene.size))
         try:
@@ -23,7 +25,10 @@ class Gene:
             raise Exception("Invalid Gene :: Not a heax value")
         return strgene
 
-    def bin(self):
+    def randomHexaDecimalNumber()->str:
+        return hex(randint(0,15))[2:]
+
+    def bin(self)->str:
         return bin(int(self.gene,16))[2:].rjust(Gene.size*4,"0")
 
     def __str__(self):
@@ -40,100 +45,56 @@ class Gene:
 
 class Genome:
     ''' Genomes consist of array/sequence of Gene '''
+    fill=" "
     def __init__(self,genome=None,size=None):
-        self.genome=genome
+        """Genome Can be passes ,if passed type must be string """
+
+        # self.genome=genome
         self.__size=size
         if(genome==None and size!=None):
             self.genome=self.__generateSelf()
         if(genome!=None):
-            self.genome=self.verify(genome)
+            self.genome=self.__verifyString(genome)
+            # self.genome=self.__generateSelf()
 
-    def verify(self,genome):
+    def __verifyString(self,genome:str)->list[Gene]:
+        """Considering user wont pass char out of Hexadeciaml range """
+
+        if(len(genome)%Gene.size!=0):
+            raise Exception("input string is not a valid genome")
         tmp_genome=[]
         self.__size=0
-        for i in genome:
-            tmp_genome.append(Gene(i))
+        for i in range(0,len(genome),Gene.size):
+            tmp_genome.append(Gene(genome[i:i+Gene.size]))
             self.__size+=1
         return tmp_genome
 
-    def __generateSelf(self):
+    def __generateSelf(self)->list[Gene]:
         tmp_genome=[]
         for i in range(self.__size):
             tmp_genome.append(Gene())
         return tmp_genome
 
-    def generateChildRandom(self,genomeParent1:list[Gene],genomeParent2:list[Gene],mituationRate:float):
-        """Public : Random CrossOver over two parents"""
-        if(len(genomeParent1)!=len(genomeParent2)):
-            raiseExceptions("parent Genome must be of same length")
-            
-        childGenome1=[Gene("00000000") for i in range(len(genomeParent1))]
-        # childGenome2=[Gene("00000000") for i in range(len(genomeParent2))]
-
-        for i in range(len(genomeParent2)*Gene.size):
-            if(randint(0,1)):
-                childGenome1[i//Gene.size][i%Gene.size]=genomeParent1[i//Gene.size][i%Gene.size]
-                # childGenome2[i//Gene.size][i%Gene.size]=genomeParent2[i//Gene.size][i%Gene.size]
-            else:
-                childGenome1[i//Gene.size][i%Gene.size]=genomeParent2[i//Gene.size][i%Gene.size]
-                # childGenome2[i//Gene.size][i%Gene.size]=genomeParent1[i//Gene.size][i%Gene.size]
-        
-        return Genome.mituation(childGenome1,mituationRate)
-
-    def generateChildNPointCrossover(self,genomeParent1:list[Gene],genomeParent2:list[Gene],mituationRate:float,crossoverpoint:int):
-        """Public : CrossOver over two parents from a crossover point which is set at random """
-        if(len(genomeParent1)!=len(genomeParent2)):
-            raiseExceptions("parent Genome must be of same length")
-
-        childGenome1=[Gene("00000000") for i in range(len(genomeParent1))]
-        # childGenome2=[Gene("00000000") for i in range(len(genomeParent2))]
-
-        if (crossoverpoint>1):
-            raise Exception("Havent wrote code for crossover more than 1")
-
-        x=randint(0,len(genomeParent1)*Gene.size-1)
-        for i in range(len(genomeParent1)*Gene.size):
-            if(i<=x):
-                childGenome1[i//Gene.size][i%Gene.size]=genomeParent1[i//Gene.size][i%Gene.size]
-                # childGenome2[i//Gene.size][i%Gene.size]=genomeParent2[i//Gene.size][i%Gene.size]
-            else:
-                childGenome1[i//Gene.size][i%Gene.size]=genomeParent2[i//Gene.size][i%Gene.size]
-                # childGenome2[i//Gene.size][i%Gene.size]=genomeParent1[i//Gene.size][i%Gene.size]
-        
-        return Genome.mituation(childGenome1,mituationRate)
-
-    def generateChildNGeneCrossover(self,genomeParent1:list[Gene],genomeParent2:list[Gene],mituationRate:float,crossoverpoint:int):
-        """Public : CrossOver over two parents from a crossover point which is set at random """
-        if(len(genomeParent1)!=len(genomeParent2)):
-            raiseExceptions("parent Genome must be of same length")
-
-        childGenome1=[]
-        # childGenome2=[]
-
-        if (crossoverpoint>1):
-            raise Exception("Havent wrote code for crossover more than 1")
-
-        x=randint(0,len(genomeParent1)-1)
-        childGenome1.extend(genomeParent1[:x]+genomeParent2[x:])
-        # childGenome2.extend(genomeParent2[:x]+genomeParent1[x+1:])
-                
-        return Genome.mituation(childGenome1,mituationRate)
-    
-    def mituation(genome:list[Gene],mrate:int):
-        """Public : Mutation using mituation rate """
-        return genome
-
-    def __str__(self):
-        tmp_genome="Genome : "
-        for i in self.genome:
-            tmp_genome+=i.gene+" "
-        return tmp_genome
-
-    def bin(self):
+    def bin(self)->str:
         string=""
         for i in self.genome:
             string+=i.bin()+""
         return string
+    
+    def randomGenomeLocation(self)->int:
+        return randint(0,len(self)*Gene.size-1)
+
+    def __repr__(self):
+        tmp_genome="Genome : "
+        for i in self.genome:
+            tmp_genome+=i.gene+Genome.fill
+        return tmp_genome
+
+    def __str__(self):
+        tmp_genome=""
+        for i in self.genome:
+            tmp_genome+=i.gene
+        return tmp_genome
 
     def __len__(self):
         return len(self.genome)
@@ -145,11 +106,7 @@ class Genome:
         self.genome[a//Gene.size][a%Gene.size]=key
     
 if(__name__=="__main__"):
-    genome1=Genome(size=4)
+    genome1=Genome("".join([str(Gene()) for i in range(8)]))
     genome2=Genome(size=4)
     print(genome1)
-    print(genome2)
-    # print()
-    print("Crossover PointAny :",*genome1.generateChildNPointCrossover(genome1.genome,genome2.genome,mituationRate=0.01,crossoverpoint=1),sep=" ")
-    print("Crossover Random   :",*genome1.generateChildRandom(genome1.genome,genome2.genome,mituationRate=0.01),sep=" ")
-    print("Crossover Gene     :",*genome1.generateChildNGeneCrossover(genome1.genome,genome2.genome,mituationRate=0.01,crossoverpoint=1),sep=" ")
+    print(genome2,len(genome2))
