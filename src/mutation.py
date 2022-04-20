@@ -3,7 +3,10 @@ from genome import Genome,Gene
 class Mutation:
     bitMutated=0
     modifiedLocation=[]
-    def __init__(self,genome=None,mrate=0.0,mtype="randomrandom"):
+    RANDOMSWAP="randomswap"
+    BITFLIP="bitflip"
+    RANDOMRESET="randomreset"
+    def __init__(self,genome:Genome=None,mrate:float=0.0,mtype:str="randomrandom"):
         """Mutates Genome inplace"""
         if(genome!=None and self.typeCheck(genome)):
             if(mtype=="randomswap"):
@@ -14,6 +17,7 @@ class Mutation:
                 genome=Mutation.RandomResetting(genome,mrate)
             else: # "randomrandom" / default
                 genome=Mutation.RandomRandom(genome,mrate)
+        self.genome=genome
 
     def typeCheck(self,genome)->bool:
         if(isinstance(genome,Genome)):

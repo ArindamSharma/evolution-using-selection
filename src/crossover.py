@@ -1,8 +1,10 @@
 from genome import Genome,Gene,randint
 
 class Crossover:
-
-    def __init__(self,parent1,parent2,ctype=None,charCrossover=False,geneCrossover=False,crossoverpoint=None):
+    MULTIPOINT="multipoint"
+    SINGLEPOINT="singlepoint"
+    UNIFORM="uniform"
+    def __init__(self,parent1:Genome,parent2:Genome,ctype:str=None,charCrossover=False,geneCrossover=False,crossoverpoint:int=None):
         """Corssover over Given parents as parameter """
 
         self.verifyParent(parent1,parent2)
@@ -10,21 +12,21 @@ class Crossover:
             self.offspring=Genome(size=len(parent1))    
             self.offspring2=Genome(size=len(parent2))    
             # singlepoint
-            if(ctype=="singlepoint" and charCrossover==True):
+            if(ctype==Crossover.SINGLEPOINT and charCrossover==True):
                 self.NPointCharCrossover(parent1,parent2,1)
-            elif(ctype=="singlepoint" and geneCrossover==True):
+            elif(ctype==Crossover.SINGLEPOINT and geneCrossover==True):
                 self.NPointGeneCrossover(parent1,parent2,1)
             
             # multipoint
-            elif(ctype=="multipoint" and charCrossover==True):
+            elif(ctype==Crossover.MULTIPOINT and charCrossover==True):
                 self.NPointCharCrossover(parent1,parent2,crossoverpoint)
-            elif(ctype=="multipoint" and geneCrossover==True):
+            elif(ctype==Crossover.MULTIPOINT and geneCrossover==True):
                 self.NPointCharCrossover(parent1,parent2,crossoverpoint)
 
             # uniform
-            elif(ctype=="uniform" and charCrossover==True):
+            elif(ctype==Crossover.UNIFORM and charCrossover==True):
                 self.UniformCharCrossover(parent1,parent2)
-            elif(ctype=="uniform" and geneCrossover==True):
+            elif(ctype==Crossover.UNIFORM and geneCrossover==True):
                 self.UniformCharCrossover(parent1,parent2)
 
             # default
@@ -106,4 +108,4 @@ if(__name__=="__main__"):
     parent2=Genome(size=4)
     print(repr(parent1))
     print(repr(parent2))
-    print(repr(Crossover(parent1,parent2,"multipoint",charCrossover=True,crossoverpoint=4).offspring))
+    print(repr(Crossover(parent1,parent2,Crossover.MULTIPOINT,charCrossover=True,crossoverpoint=4).offspring))

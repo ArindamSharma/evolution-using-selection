@@ -3,7 +3,6 @@ from random import randint
 class Gene:
     """Gene Consist of 8 HexaDeciamal value
     here one Gene represent a connevtion of neuron"""
-    
     size=8
     def __init__(self,gene=None):
         
@@ -13,6 +12,8 @@ class Gene:
                 self.gene+=Gene.randomHexaDecimalNumber()
         else:
             self.gene=self.geneVerify(gene)
+        
+        self.bin=self.generateBin()
 
     def geneVerify(self,strgene:str)->str:
         """Considering user wont pass char out of Hexadeciaml range """
@@ -28,7 +29,7 @@ class Gene:
     def randomHexaDecimalNumber()->str:
         return hex(randint(0,15))[2:]
 
-    def bin(self)->str:
+    def generateBin(self)->str:
         return bin(int(self.gene,16))[2:].rjust(Gene.size*4,"0")
 
     def __str__(self):
@@ -41,7 +42,7 @@ class Gene:
         self.gene=self.gene[:x]+str(key)+self.gene[x+1:]
 
     def __repr__(self) -> str:
-        return "Hex: "+self.gene+"\n"+"Bin: "+ Gene.bin()
+        return "Gene: "+self.gene
 
 class Genome:
     ''' Genomes consist of array/sequence of Gene '''
