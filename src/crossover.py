@@ -41,7 +41,7 @@ class Crossover:
     def verifyParent(self,parent1:Genome,parent2:Genome)->bool:
         if(isinstance(parent1,Genome) and isinstance(parent2,Genome) and len(parent1)==len(parent2)):
             return True
-        raise Exception("Invalid Parents")
+        raise Exception("Invalid Parents : "+str(parent1)+" and "+str(parent2))
 
     def UniformCharCrossover(self,parent1:Genome,parent2:Genome)->None:
         """CrossOver over two parents Uniformly (to all location)"""

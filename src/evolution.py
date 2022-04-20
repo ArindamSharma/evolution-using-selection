@@ -4,7 +4,6 @@ from genome import Genome
 from random import randint,shuffle
 from crossover import Crossover
 from mutation import Mutation
-from selection import Selection
 
 class Evolution():
     def __init__(self,population_size=100,genome_size=4,world_size=128, step_per_gen=300,mutation=0.0):
@@ -32,47 +31,42 @@ class Evolution():
                 self.usedLocation[loc]=Creature(creatureGenome,loc)    
 
     def grow(self)->None:
+        ''' after this loop creature have aged 1 unit'''
         for creature in self.usedLocation:
             self.usedLocation[creature].grow()# to iteratrate once
-        # after this loop creature have aged 1 unit
     
-    def testGenEvolve(self)->None:
-        for gen in range(100):# first 100 generations
-            self.refreshLocation()
-            self.introducingPopulation()
-            
-            self.lifecycle()
-            # here i have to store the data from genertion 1
-            # apply fitness function
-            self.terminateUnfit(SelectionCriteria=Selection.selectionCriteria1)
-            self.repopulate([i.getGenome() for i in self.usedLocation.values()])
-
     def terminateUnfit(self,SelectionCriteria:Function)->None:
         '''this function remove the creature which are unfit for the population using fitness function passed '''
+        creatureToRemove=[]
         for creature in self.usedLocation:
             if (self.fitnessScore(self.usedLocation[creature],SelectionCriteria)==False):
-                del self.usedLocation[creature]
+                creatureToRemove.append(creature)
 
-    def repopulate(self,oldcreatures:list[Creature])->None:
-        '''this function will re-create creature for the remaining creature based on fitness function'''
+        # print("Creature to delete",len(creatureToRemove))
+        for creature in creatureToRemove:
+            del self.usedLocation[creature]
+
+    def repopulate(self,oldCreaturesGenomeList:list[Genome])->list[Genome]:
+        '''this function will re-create creature for the remaining creature genome based on fitness function and return new Creatures Genome List'''
+        if(len(oldCreaturesGenomeList)==0):
+            raise Exception("passed population cannot be empty")
+        
         self.refreshLocation()
-        x=len(oldcreatures)
+        x=len(oldCreaturesGenomeList)
         parentAllCombination=[]
         for i in range(x):
             for j in range(i+1,x):
                 parentAllCombination.append([i,j])
-        newCreatureGenome=[]
+        
+        newCreatureGenomeList=[]
         for i in range(self.population_size):
-            x=randint(0,len(parentAllCombination))
+            x=randint(0,len(parentAllCombination)-1)
             tmppair=parentAllCombination.pop(x)
-            newCreatureGenome.append(
-                Mutation(
-                    Crossover(oldcreatures[tmppair[0]].getGenome(),oldcreatures[tmppair[1]],Crossover.SINGLEPOINT,charCrossover=True).offspring,
-                    self.mituation_rate,
-                    Mutation.RANDOMSWAP
-                ).genome
-            )
-        self.introducingPopulation(newCreatureGenome)
+            # print(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover.SINGLEPOINT,geneCrossover=True).offspring,Mutation(Crossover(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover.SINGLEPOINT,charCrossover=True).offspring,self.mituation_rate,Mutation.RANDOMSWAP).genome,)
+            newCreatureGenomeList.append(Mutation(Crossover(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover.SINGLEPOINT,charCrossover=True).offspring,self.mituation_rate,Mutation.RANDOMSWAP).genome)
+        # print(newCreatureGenomeList)
+        return newCreatureGenomeList
+        # self.introducingPopulation(newCreatureGenomeList)
         
     def fitnessScore(self,creature:Creature,fitnessfunction:Function)->bool:
         '''this function return true when the creature fits the selection criteria else false 
@@ -81,11 +75,16 @@ class Evolution():
             return True
         return False
 
-
-    def lifecycle(self):
+    def lifecycle(self,gencount:int):
         '''after this loop creature have finished there lifecycle'''
+        # print()
         for _ in range(self.step_per_gen):
+            print("Gen",gencount,"- Day",_+1,end="\r")
             self.grow()
+    
+    def storeGenData(self)->None:
+        '''will store the date/genome string into a file'''
+        pass
 
     def refreshLocation(self)->None:
         '''Clear/Refresh the world '''
@@ -94,6 +93,7 @@ class Evolution():
             for j in range(self.world_size):
                 self.unusedLocation.append((i,j))
         self.usedLocation.clear()# clearing the used location
+        self.population=0
         # print("Location Refreshed")
 
     def getRandomEmptyLocation(self)-> tuple:
@@ -113,9 +113,46 @@ class Evolution():
     def populationExceedCheck(self)->None:
         if(self.population>(self.world_size*self.world_size)):
             raise ValueError("Population Limit Exceed :Max population can be "+str(self.world_size*self.world_size))
+    
+    def testGenEvolve(self,gen_limit=1)->None:
+        population=[Genome(size=self.genome_size) for i in range(self.population_size)]
+        for gen in range(gen_limit+1):# first 100 generations
+            self.refreshLocation()
+            # print(population)
+            self.introducingPopulation(population)
+            self.lifecycle(gen)
+            # here i have to store the data from genertion 1
+            self.storeGenData()
+            # apply fitness function
+            # print(self.usedLocation,[i.getGenome() for i in self.usedLocation.values()])
+            self.terminateUnfit(SelectionCriteria=self.selectionCriteria1)
+            # print(self.usedLocation,[i.getGenome() for i in self.usedLocation.values()])
+            population=self.repopulate([i.getGenome() for i in self.usedLocation.values()])
+        print()
+
+    def selectionCriteria1(self,creature:Creature)->bool:
+        '''this is custom function thats changes with different criteria'''
+        return True
+        if(creature.location[0]>self.world_size/2):
+            return True
+        return False
+
+    def selectionCriteria2(self,creature:Creature)->bool:
+        '''this is custom function thats changes with different criteria'''
+        return True
+        if(creature.location[1]>self.world_size/2):
+            return True
+        return False
 
 if(__name__=="__main__"):
     evo=Evolution(population_size=47,genome_size=4,world_size=10,step_per_gen=300,mutation=0.1)
-    print(evo.unusedLocation)
-    evo.introducingPopulation()
-    print(evo.usedLocation)
+    # print(evo.unusedLocation)
+    # evo.introducingPopulation()
+    # print(evo.usedLocation)
+    evo.testGenEvolve(100)
+    # evo.introducingPopulation()
+    
+    # evo.terminateUnfit(SelectionCriteria=evo.selectionCriteria1)
+    # x=[i.getGenome() for i in evo.usedLocation.values()]
+    # print(x)
+    # print(evo.repopulate(x))

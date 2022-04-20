@@ -10,13 +10,13 @@ class Mutation:
         """Mutates Genome inplace"""
         if(genome!=None and self.typeCheck(genome)):
             if(mtype=="randomswap"):
-                genome=Mutation.RandomSwap(genome,mrate)
+                Mutation.RandomSwap(genome,mrate)
             elif(mtype=="bitflip"):
-                genome=Mutation.BitFlip(genome,mrate)
+                Mutation.BitFlip(genome,mrate)
             elif(mtype=="randomreset"):
-                genome=Mutation.RandomResetting(genome,mrate)
+                Mutation.RandomResetting(genome,mrate)
             else: # "randomrandom" / default
-                genome=Mutation.RandomRandom(genome,mrate)
+                Mutation.RandomRandom(genome,mrate)
         self.genome=genome
 
     def typeCheck(self,genome)->bool:
