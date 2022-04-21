@@ -16,7 +16,7 @@ class Evolution():
         self.population=0
         self.unusedLocation=[]
         self.usedLocation={}
-        
+
         self.refreshLocation()
         
     """Adding Population to the World"""
@@ -24,11 +24,11 @@ class Evolution():
         if(creatureGenomeList==None):    
             for i in range(self.population_size):
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc)    
+                self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc,self.usedLocation)    
         else:
             for creatureGenome in creatureGenomeList:
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(creatureGenome,loc)    
+                self.usedLocation[loc]=Creature(creatureGenome,loc,self.usedLocation)    
 
     def grow(self)->None:
         ''' after this loop creature have aged 1 unit'''
@@ -144,15 +144,17 @@ class Evolution():
             return True
         return False
 
+    def __repr__(self) -> str:
+        return "============ Parameters ========\n"\
+        +" World Size :".ljust(21," ")+str(self.world_size).rjust(9," ")+"\n"\
+        +" Population :".ljust(21," ")+str(self.population_size).rjust(9," ")+"\n"\
+        +" Step Per Generation :".ljust(21," ")+str(self.step_per_gen).rjust(9," ")+"\n"\
+        +" Genome Size :".ljust(21," ")+str(self.genome_size).rjust(9," ")+"\n"\
+        +" Mutation Rate :".ljust(21," ")+str(self.mituation_rate).rjust(9," ")+"\n"\
+        +"================================"
+
 if(__name__=="__main__"):
     evo=Evolution(population_size=47,genome_size=4,world_size=10,step_per_gen=300,mutation=0.1)
-    # print(evo.unusedLocation)
-    # evo.introducingPopulation()
-    # print(evo.usedLocation)
-    evo.testGenEvolve(100)
-    # evo.introducingPopulation()
+    print(repr(evo))
     
-    # evo.terminateUnfit(SelectionCriteria=evo.selectionCriteria1)
-    # x=[i.getGenome() for i in evo.usedLocation.values()]
-    # print(x)
-    # print(evo.repopulate(x))
+    evo.testGenEvolve(100)
