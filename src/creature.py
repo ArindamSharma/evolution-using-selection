@@ -1,12 +1,17 @@
-from typing import Any
 import neuralnetwork as nn
 from neurons import *
 from genome import Genome
 # from world import Coordinates
 
 class Creature:
-    def __init__(self,genome:Genome,location:tuple,envLoc:dict[tuple,Any]):
+    envLoc={}
+    def resetEnvLoc()->None:
+        '''Clears out the Locations of Creature'''
+        Creature.envLoc.clear()
+
+    def __init__(self,genome:Genome,location:tuple):
         '''Takes Genome for creation of Creature and Location where it exist and other Creatures Location Pointer'''
+        Creature.envLoc[location]=self
         self.coordinates=None
         # self.brain=nn()
         self.genome=genome

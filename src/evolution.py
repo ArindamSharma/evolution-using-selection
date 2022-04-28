@@ -24,11 +24,11 @@ class Evolution():
         if(creatureGenomeList==None):    
             for i in range(self.population_size):
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc,self.usedLocation)    
+                self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc)    
         else:
             for creatureGenome in creatureGenomeList:
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(creatureGenome,loc,self.usedLocation)    
+                self.usedLocation[loc]=Creature(creatureGenome,loc)    
 
     def grow(self)->None:
         ''' after this loop creature have aged 1 unit'''
@@ -88,6 +88,7 @@ class Evolution():
 
     def refreshLocation(self)->None:
         '''Clear/Refresh the world '''
+        Creature.resetEnvLoc()
         self.unusedLocation.clear()# clearing the world unsued location
         for i in range(self.world_size):
             for j in range(self.world_size):

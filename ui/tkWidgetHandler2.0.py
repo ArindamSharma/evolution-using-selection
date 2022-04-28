@@ -32,7 +32,7 @@ class Img(tk.PhotoImage):
         self.widgetType="PhotoImage"
         self.path=file_path
 
-class WidgetHandler(tk.Tk,View,Img):
+class WidgetHandler(tk.Tk,View,Img,Frame):
     def __init__(self,title,size=(800,590),min_size=(560,360),favicon_path=None,*arg,**kwarg):
         tk.Tk.__init__(self,*arg,**kwarg)
         self.view={"count":0}
@@ -226,5 +226,5 @@ class WidgetHandler(tk.Tk,View,Img):
         
 
 if __name__=="__main__":
-    master=WidgetHandler("Testing",(800,560),(560,360),"./img/icon/logo1.png")
+    master=WidgetHandler("Testing",(800,560),(560,360),"../img/icon/logo1.png")
     master.mainloop()
