@@ -6,7 +6,7 @@ sys.path.append('../src')
 from creature import Creature
 from color import Color
 from genome import Genome
-from random import choice
+from random import choice,randint
 from time import sleep
 
 
@@ -31,7 +31,7 @@ class LocCanvas(tk.Canvas):
         #     for j in range(self.mat_size):
         #         self.addPoint(i,j,'red')
         for i in loc:
-            self.addPoint(i[0],i[1],Color.rgbToHex(255,0,0))
+            self.addPoint(i[0],i[1],Color.rgbToHex(randint(0,255),randint(0,255),randint(0,255)))
 
     def clearPoints(self)->None:
         for i in self.pointArray:
@@ -60,7 +60,7 @@ class LocCanvas(tk.Canvas):
             
             self.initPoints(pp)
             self.update()
-            sleep(0.1)
+            sleep(0.05)
 
 
 
@@ -69,7 +69,7 @@ if(__name__=="__main__"):
     root.title("Testing LocCanvas")
     root.geometry("650x650")
     root.configure(bg="light grey")
-    mat_size=100
+    mat_size=500
     graph=LocCanvas(root,600,600,bg=Color.light_blue,mat_size=mat_size,dot_size=6)
     graph.pack(expand=True)
     pp={}
