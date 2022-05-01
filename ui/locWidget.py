@@ -4,16 +4,17 @@ import sys
 sys.path.append('../src')
 
 from creature import Creature
-from color import Color
 from genome import Genome
+
+from color import Color
 from random import choice,randint
 from time import sleep
-
 
 class LocCanvas(tk.Canvas):
 
     def __init__(self,parent,height,width,mat_size,dot_size,*arg,**kwarg):
         tk.Canvas.__init__(self,parent,*arg,**kwarg,height=height,width=width,highlightthickness=0)
+        self.parent=parent
         self.dot_size=dot_size
         self.mat_size=mat_size
         self.height=height
@@ -25,11 +26,10 @@ class LocCanvas(tk.Canvas):
         self.bind("<Button-1>", self.button1)
 
     def initPoints(self,loc:dict[tuple,any]):
-        # print(loc)
-        
         # for i in range(self.mat_size):
         #     for j in range(self.mat_size):
         #         self.addPoint(i,j,'red')
+
         for i in loc:
             self.addPoint(i[0],i[1],Color.rgbToHex(randint(0,255),randint(0,255),randint(0,255)))
 
@@ -60,8 +60,27 @@ class LocCanvas(tk.Canvas):
             
             self.initPoints(pp)
             self.update()
+            self.parent.label.config(text="Gen "+str(_))
             sleep(0.05)
 
+class LocWidget(tk.Frame):
+	def __init__(self,parent,height,width,*arg,**kwarg):
+		tk.Frame.__init__(self,parent,*arg,**kwarg)
+		
+		self.label=tk.Label(self,text="Gen 0")
+		self.label.pack(side=tk.TOP,fill=tk.X)
+
+		self.mat_size=128
+		self.locGraph=LocCanvas(self,height,width,bg=Color.white,mat_size=self.mat_size,dot_size=4)
+		self.locGraph.pack()
+		pp={}
+		for i in range(self.mat_size):
+			for j in range(self.mat_size):
+				if(choice([1]+1*[0,0,0,0,0,0,0,0,0,0,0,0,0])):
+					loc=(i,j)
+					pp[loc]=Creature(Genome(size=4),loc)
+
+		self.locGraph.initPoints(pp)
 
 
 if(__name__=="__main__"):
@@ -70,16 +89,8 @@ if(__name__=="__main__"):
     root.geometry("650x650")
     root.configure(bg="light grey")
     mat_size=500
-    graph=LocCanvas(root,600,600,bg=Color.light_blue,mat_size=mat_size,dot_size=6)
-    graph.pack(expand=True)
-    pp={}
-    for i in range(mat_size):
-        for j in range(mat_size):
-            if(choice([1]+1*[0,0,0,0,0,0,0,0,0,0,0,0,0])):
-                loc=(i,j)
-                pp[loc]=Creature(Genome(size=4),loc)
-    
-    graph.initPoints(pp)
+    graphFrame=LocWidget(root,height=600,width=600)
+    graphFrame.pack(expand=True)
 
     # print(len(pp),mat_size**2)
     root.mainloop()
