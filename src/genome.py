@@ -2,7 +2,7 @@ from random import randint
 
 class Gene:
     """Gene Consist of 8 HexaDeciamal value
-    here one Gene represent a connevtion of neuron"""
+    here one Gene represent a Connection of neuron"""
     size=8
     def __init__(self,gene=None):
         
@@ -53,7 +53,7 @@ class Genome:
         # self.genome=genome
         self.__size=size
         if(genome==None and size!=None):
-            self.genome=self.__generateSelf()
+            self.genome=self.__validateGenome(self.__generateSelf())
         if(genome!=None):
             self.genome=self.__verifyString(genome)
             # self.genome=self.__generateSelf()
@@ -63,12 +63,16 @@ class Genome:
 
         if(len(genome)%Gene.size!=0):
             raise Exception("input string is not a valid genome")
-        tmp_genome=[]
+        tmp_genome:list[Gene]=[]
         self.__size=0
         for i in range(0,len(genome),Gene.size):
             tmp_genome.append(Gene(genome[i:i+Gene.size]))
             self.__size+=1
         return tmp_genome
+
+    def __validateGenome(self,genome:list[Gene])->list[Gene]:
+        '''all gene in passed genome is valid or not '''
+        return genome
 
     def __generateSelf(self)->list[Gene]:
         tmp_genome=[]

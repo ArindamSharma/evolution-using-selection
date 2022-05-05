@@ -60,14 +60,14 @@ class LocCanvas(tk.Canvas):
             
             self.initPoints(pp)
             self.update()
-            self.parent.label.config(text="Gen "+str(_))
+            # self.parent.label.config(text="Gen "+str(_))
             sleep(0.05)
 
 class LocWidget(tk.Frame):
-	def __init__(self,parent,height,width,*arg,**kwarg):
+	def __init__(self,parent,height,width,title:str="",*arg,**kwarg):
 		tk.Frame.__init__(self,parent,*arg,**kwarg)
 		
-		self.label=tk.Label(self,text="Gen 0")
+		self.label=tk.Label(self,text=title)
 		self.label.pack(side=tk.TOP,fill=tk.X)
 
 		self.mat_size=128
@@ -89,7 +89,7 @@ if(__name__=="__main__"):
     root.geometry("650x650")
     root.configure(bg="light grey")
     mat_size=500
-    graphFrame=LocWidget(root,height=600,width=600)
+    graphFrame=LocWidget(root,height=600,width=600,title="World Simulator")
     graphFrame.pack(expand=True)
 
     # print(len(pp),mat_size**2)

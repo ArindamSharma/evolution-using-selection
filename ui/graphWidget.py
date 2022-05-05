@@ -30,3 +30,14 @@ class SingleGraphWidget(tk.Frame):
 		tk.Frame.__init__(self,parent,*arg,**kwarg)
 
 
+if(__name__=="__main__"):
+    root=tk.Tk()
+    root.title("Testing LocCanvas")
+    root.geometry("650x650")
+    root.configure(bg="light grey")
+	
+    graphFrame=GraphWidget(root,bg=Color.light_coral)
+    graphFrame.pack(expand=True,fill=tk.BOTH)
+
+    # print(len(pp),mat_size**2)
+    root.mainloop()

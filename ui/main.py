@@ -53,7 +53,7 @@ class HomePage(tk.Frame):
 		graphStatusFrame=tk.Frame(self,bg=Color.dark_gray)
 		graphStatusFrame.pack(side=tk.TOP,fill=tk.X)
 		# World
-		graphFrame=LocWidget(graphStatusFrame,height=500,width=500)
+		graphFrame=LocWidget(graphStatusFrame,height=500,width=500,title="World Map")
 		graphFrame.pack(side=tk.LEFT)
 		# Status
 		statusBox=StatusWidget(graphStatusFrame,bg=Color.light_green)

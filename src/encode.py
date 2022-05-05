@@ -1,35 +1,26 @@
-from genome import Genome,Gene
-from neurons import ActionNeurons,InnerNeurons,SensorNeurons
+from genome import Genome
+from neurons import Connection
 
 class Encode():
+    """Neuron Encoding to Genome
     """
-    """
-    def __init__(self,):
+    def __init__(self,linkArray: list[Connection]):
+        self.genome=Genome(genome=self.encode(linkArray))
+
+    def encode(self,linkArray):
         pass
 
 class Decode():
-    """
+    """Genome Decoding 
     """
     def __init__(self,genome:Genome):
+        self.linkArray:list[Connection]=[]
         for i in genome.genome:
-            self.decode(i)
-
-    def decode(self,gene:Gene)->tuple:
-        print(gene.bin)
-        print(gene.bin[0],gene.bin[1:10],gene.bin[10],gene.bin[11:20],gene.bin[20:32])
-        if(gene.bin[0]=='0'):
-            print("S:SensoryNeuron")
-        else:
-            print("S:Inner Neuron")
-        print("S:",int(gene.bin[1:10],2))
-        if(gene.bin[10]=='0'):
-            print("D:Inner Neuron")
-        else:
-            print("D:ActionNeuron")
-        print("D:",int(gene.bin[11:20],2))
-        print("W:",int(gene.bin[20:32],2))
-
+            self.linkArray.append(Connection(i))
+    
+    def __str__(self)->str:
+        return str(self.linkArray)
 
 if(__name__=="__main__"):
-    genome=Genome(size=4)
-    brain=Decode(genome)
+    genome=Genome(size=24)
+    print(Decode(genome))

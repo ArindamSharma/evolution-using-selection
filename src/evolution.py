@@ -1,21 +1,27 @@
-from pyclbr import Function
 from creature import Creature
 from genome import Genome
 from random import randint,shuffle
 from crossover import Crossover
 from mutation import Mutation
+from neurons import InnerNeuron
 
 class Evolution():
-    def __init__(self,population_size=100,genome_size=4,world_size=128, step_per_gen=300,mutation=0.0):
+    def __init__(self,population_size=100,genome_size=4,world_size=128, step_per_gen=300,mutation=0.0,inner_neuron=1):
         self.population_size=population_size
         self.genome_size=genome_size
         self.step_per_gen=step_per_gen
         self.mituation_rate=mutation
-
+        self.inner_neuron=inner_neuron
+        InnerNeuron.initNeuron(inner_neuron)
+        
         self.world_size=world_size
         self.population=0
         self.unusedLocation=[]
         self.usedLocation={}
+
+        self.survival_rate=None
+        self.diversity=None
+        self.murder=None
 
         self.refreshLocation()
         
@@ -24,18 +30,18 @@ class Evolution():
         if(creatureGenomeList==None):    
             for i in range(self.population_size):
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc)    
+                self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc,self.inner_neuron)    
         else:
             for creatureGenome in creatureGenomeList:
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(creatureGenome,loc)    
+                self.usedLocation[loc]=Creature(creatureGenome,loc,self.inner_neuron)    
 
     def grow(self)->None:
         ''' after this loop creature have aged 1 unit'''
         for creature in self.usedLocation:
             self.usedLocation[creature].grow()# to iteratrate once
     
-    def terminateUnfit(self,SelectionCriteria:Function)->None:
+    def terminateUnfit(self,SelectionCriteria:any)->None:
         '''this function remove the creature which are unfit for the population using fitness function passed '''
         creatureToRemove=[]
         for creature in self.usedLocation:
@@ -68,7 +74,7 @@ class Evolution():
         return newCreatureGenomeList
         # self.introducingPopulation(newCreatureGenomeList)
         
-    def fitnessScore(self,creature:Creature,fitnessfunction:Function)->bool:
+    def fitnessScore(self,creature:Creature,fitnessfunction:any)->bool:
         '''this function return true when the creature fits the selection criteria else false 
         .in other word fitness value 1 is sutable to reproduce and 0 not.'''
         if(fitnessfunction(creature)):

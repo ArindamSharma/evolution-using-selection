@@ -1,0 +1,18 @@
+# This Directory Contains All required modules 
+
+- [Genome](./genome.py) (Details [here](./genome-readme.md))
+- [Evolution](./evolution.py)
+- [creature](./creature.py)
+- [crossover.py](./crossover.py)
+- [encode.py](./encode.py)
+- [evolution.py](./evolution.py)
+- [genome-readme.md](./genome-readme.md)
+- [genome.py](./genome.py)
+- [mutation.py](./mutation.py)
+- [neuralnet.py](./neuralnet.py)
+- [neuralnetwork.py](./neuralnetwork.py)
+- [neurons.py](./neurons.py)
+- [readme.md](./readme.md)
+- [selection.py](./selection.py)
+- [utils.py](./utils.py)
+- [world.py](./world.py)
