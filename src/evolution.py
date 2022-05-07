@@ -3,7 +3,6 @@ from genome import Genome
 from random import randint,shuffle
 from crossover import Crossover
 from mutation import Mutation
-from neurons import InnerNeuron
 
 class Evolution():
     def __init__(self,population_size=100,genome_size=4,world_size=128, step_per_gen=300,mutation=0.0,inner_neuron=1):
@@ -12,7 +11,6 @@ class Evolution():
         self.step_per_gen=step_per_gen
         self.mituation_rate=mutation
         self.inner_neuron=inner_neuron
-        InnerNeuron.initNeuron(inner_neuron)
         
         self.world_size=world_size
         self.population=0

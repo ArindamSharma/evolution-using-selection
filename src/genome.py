@@ -1,19 +1,29 @@
 from random import randint
 
+from neurons import InnerNeuron
+
 class Gene:
     """Gene Consist of 8 HexaDeciamal value
     here one Gene represent a Connection of neuron"""
     size=8
-    def __init__(self,gene=None):
-        
-        if (gene==None):
+    def __init__(self,gene:str=None,bin:str=None):
+        '''Generate Gene if nothing is passes ,
+
+        generate and verify Gene if gene str is passes ,
+
+        generate gene is bin str is passes'''
+
+        if (gene==None and bin==None):
             self.gene=""
             for i in range(self.size):
                 self.gene+=Gene.randomHexaDecimalNumber()
-        else:
+            self.bin=self.generateBin()
+        elif(gene!=None and bin==None):
             self.gene=self.geneVerify(gene)
-        
-        self.bin=self.generateBin()
+            self.bin=self.generateBin()
+        elif(bin!=None):
+            self.bin=bin
+            self.gene=self.geneVerify(self.generateGene())
 
     def geneVerify(self,strgene:str)->str:
         """Considering user wont pass char out of Hexadeciaml range """
@@ -30,7 +40,15 @@ class Gene:
         return hex(randint(0,15))[2:]
 
     def generateBin(self)->str:
-        return bin(int(self.gene,16))[2:].rjust(Gene.size*4,"0")
+        '''generate gene from bin'''
+        return format(int(self.gene,16),'0'+str(Gene.size*4)+'b')
+
+    def generateGene(self)->str:
+        '''generate bin from gene'''
+        return format(int(self.bin,2),'0'+str(Gene.size)+'x')
+
+    def __eq__(self, __o: object) -> bool:
+        return isinstance(__o,Gene) and self.gene==__o
 
     def __str__(self):
         return self.gene
@@ -47,26 +65,25 @@ class Gene:
 class Genome:
     ''' Genomes consist of array/sequence of Gene '''
     fill=" "
-    def __init__(self,genome=None,size=None):
+    def __init__(self,genome:str=None,size:int=None):
         """Genome Can be passes ,if passed type must be string """
-
+        
         # self.genome=genome
-        self.__size=size
         if(genome==None and size!=None):
-            self.genome=self.__validateGenome(self.__generateSelf())
+            self.genome=self.__validateGenome(self.__generateSelf(size))
         if(genome!=None):
             self.genome=self.__verifyString(genome)
             # self.genome=self.__generateSelf()
 
-    def __verifyString(self,genome:str)->list[Gene]:
+    def __verifyString(self,__genome:str)->list[Gene]:
         """Considering user wont pass char out of Hexadeciaml range """
 
-        if(len(genome)%Gene.size!=0):
+        if(len(__genome)%Gene.size!=0 or len(__genome)==0):
             raise Exception("input string is not a valid genome")
         tmp_genome:list[Gene]=[]
         self.__size=0
-        for i in range(0,len(genome),Gene.size):
-            tmp_genome.append(Gene(genome[i:i+Gene.size]))
+        for i in range(0,len(__genome),Gene.size):
+            tmp_genome.append(Gene(__genome[i:i+Gene.size]))
             self.__size+=1
         return tmp_genome
 
@@ -74,9 +91,9 @@ class Genome:
         '''all gene in passed genome is valid or not '''
         return genome
 
-    def __generateSelf(self)->list[Gene]:
+    def __generateSelf(self,__size:int)->list[Gene]:
         tmp_genome=[]
-        for i in range(self.__size):
+        for i in range(__size):
             tmp_genome.append(Gene())
         return tmp_genome
 
@@ -115,3 +132,4 @@ if(__name__=="__main__"):
     genome2=Genome(size=4)
     print(genome1)
     print(genome2,len(genome2))
+    print(Gene(bin=Gene().bin))

@@ -1,5 +1,6 @@
-from genome import Gene
 from utils import Pair
+from weight import Weight
+from math import tanh
 
 class SensorNeuron():
     neuronID=[
@@ -35,47 +36,68 @@ class SensorNeuron():
         '''output range of sensory neurons is from 0.0 - 1.0'''
         self.id=neuronId
         self.code=SensorNeuron.neuronID[self.id]
-        self.value=None
+        self.value:float=None
         self.next:list[Pair[InnerNeuron|ActionNeuron,Weight]]=[]
 
+    def getSensorValue(self)->float:
+        '''based on neuronID/sensor code extract sensor value'''
+        if(self.code=="Age"):
+            self.value=None
+        elif(self.code=="LocX"):
+            self.value=None
+        return self.value
 
-    def getSensorValue(self,neuron_id:int):
+    def updateNext(self):
+        '''after getting sensor value this function should be called'''
+        if(self.value==None):
+            raise Exception("getSencorValue method need to be called before calling updateNext method to update sensor value")
+        for i in self.next:
+            i.first.input_neuron_value.append(self.value*i.second)
         pass
-
-    def updateOutput(self):
-        self.value=None
 
     def __str__(self)->str:
         return "Sensory Neuron ID "+str(self.id)+" Code "+str(self.code)+" "
 
     def __repr__(self)->str:
         return "Sensory "+str(self.code)+" "
+        # return "Sensory "+str(self.code)+" next ["+",".join([str(i.first) for i in self.next])+"]"
 
 class InnerNeuron():
-    neuronID=[]
-    SIZE=len(neuronID)
+    neuronID=["I0"]
+    SIZE=1
     def initNeuron(innerNeurons:int)->None:
-        for i in range(innerNeurons):
+        for i in range(1,innerNeurons):
             InnerNeuron.neuronID.append("I"+str(i))
             InnerNeuron.SIZE+=1
 
     def __init__(self,neuronId:str):
         '''output range of inner neuron is from -1.0 - 1.0'''
         self.input_neurons_value:list[float]=[]# previous neurons weighted values
-        self.value=None
+        self.value:float= None
         self.id=neuronId
         self.code=InnerNeuron.neuronID[self.id]
         self.next:list[Pair[InnerNeuron|ActionNeuron,Weight]]=[]
         self.self_neuron=0
         
-    def updateOutput(self):
-        self.value=None
+    def accumulateInput(self):
+        self.value=tanh(sum(self.input_neurons_value))
+
+    def updateNext(self):
+        # TODO self loop code is not added now ,just ignored ,need to add in future
+
+        if (self.value==None):
+            raise Exception("There is no input to the neuron .this can occur if there is no incomming neuron to this neuron OR there accumlate Input function is not called")
+
+        for neuron in self.next:
+            if(neuron.first.id!=self.id):# ignoring self loop for now 
+                neuron.first.input_neuron_value.append(neuron.second*self.value)
 
     def __str__(self)->str:
         return "Inner Neuron ID "+str(self.id)+" Code "+str(self.code)+" "
 
     def __repr__(self)->str:
         return "Inner "+str(self.code)+" "
+        # return "Inner "+str(self.code)+" next ["+",".join([str(i.first) for i in self.next])+"]"
         
 class ActionNeuron():
     neuronID=[
@@ -86,6 +108,8 @@ class ActionNeuron():
         "MvBw",# Move Backward
         "TnR",# Turn Right
         "TnL",# Turn Left
+        "TnR45",# Turn Right 45 degree
+        "TnL45",# Turn Left 45 degree
         "MvE",# Move East
         "MvW",# Move West
         "MvN",# Move North
@@ -103,8 +127,11 @@ class ActionNeuron():
         self.id=neuronId
         self.code=ActionNeuron.neuronID[self.id]
 
-    def updateOutput(self):
-        pass
+    def accumulateInput(self):
+        self.value=tanh(sum(self.input_neurons_value))
+
+    def getActionValue(self):
+        return self.value
 
     def __str__(self)->str:
         return "Action Neuron ID "+str(self.id)+" Code "+str(self.code)+" "
@@ -112,52 +139,5 @@ class ActionNeuron():
     def __repr__(self)->str:
         return "Action "+str(self.code)+" "
 
-
-class Connection():
-    '''Connection is a link information , contains source details ,destination details ,and weight details '''
-    def __init__(self ,gene:Gene) -> None:
-        self.source_id=int(gene.bin[0])
-        self.source_add=int(gene.bin[1:8],2)
-        self.dest_id=int(gene.bin[8])
-        self.dest_add=int(gene.bin[9:16],2)
-        self.weight=Weight(Connection.signed16bit(gene.bin[16:]))
-        # if(self.source_id=='0'):
-        #     self.source_id="S"
-        #     # self.source_add%=SensorNeuron.number
-        # else:
-        #     self.source_id="I"
-        #     # self.source_add%=InnerNeuron.number
-        # if(self.dest_id=='0'):
-        #     self.dest_id="I"
-        # else:
-        #     self.dest_id="O"
-
-        # print(self.source_id,int(self.source_add,2),self.dest_id,int(self.dest_add,2),Connection.signed16bit(self.weight))
-        self.array=(self.source_id,self.source_add,self.dest_id,self.dest_add,self.weight)
-      
-    def signed16bit(value:str)->int:
-        if(value[0]=='1'):
-            return int(value,2)-(1<<16)
-            # return int(value,2)-2**16
-        return int(value,2)
-    
-    def __str__(self) -> str:
-        return " ".join([self.source_id,self.source_add,self.dest_id,self.dest_add,self.weight])
-
-    def __repr__(self) -> str:
-        return " ".join(str(i) for i in [self.source_id,self.source_add,self.dest_id,self.dest_add,self.weight])
-
-class Weight():
-    CONSTANT=(1<<15)/4
-    '''weight should be in range of -4.0 - 4.0'''
-    def __init__(self,weight:int):
-        self.weight=weight/Weight.CONSTANT
-
-    def __str__(self) -> str:
-        return str(self.weight)
-
-    def __repr__(self) -> str:
-        return str(self.weight)
-
 if __name__=="__main__":
-    print(Weight.CONSTANT)
+    pass
