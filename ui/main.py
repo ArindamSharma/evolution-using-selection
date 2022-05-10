@@ -1,19 +1,21 @@
+from ast import arg
+from time import sleep
 import tkinter as tk
 
 import sys
 
-from cv2 import exp
-from django.conf import Settings
+
 sys.path.append('../src')
 
-from evolution import Evolution,SimParam
+from evolution import Evolution
 from creature import Creature
-# from genome import Genome
+from genome import Genome
 
 from locWidget import LocWidget
 from controlWidget import StatusWidget
 from graphWidget import GraphWidget
 from color import Color
+import threading
 
 class Simulator(tk.Tk):
 
@@ -41,9 +43,14 @@ class Simulator(tk.Tk):
 
 		# self.show_frame(MainPage)
 		self.show_frame(EvolutionSimPage)
+		
+		# self.protocol("WM_DELETE_WINDOW", self.window_exit)
 	
 	def show_frame(self,widget):
 		self.frames[widget].tkraise()
+	
+	# def window_exit(self):
+	# 	pass
 
 class MainPage(tk.Frame):
 	
@@ -67,7 +74,7 @@ class MainPage(tk.Frame):
 
 		self.labelFrame=tk.Frame(self,bg=Color.rgbToHex(0,90,109))
 		self.labelFrame.pack(pady=50)
-		self.label1=tk.Label(self.labelFrame,text="Visvualization Tool",bg=Color.rgbToHex(0,90,109),fg=Color.white,font=("Arial", 55))
+		self.label1=tk.Label(self.labelFrame,text="Visualization Tool",bg=Color.rgbToHex(0,90,109),fg=Color.white,font=("Arial", 55))
 		self.label1.pack()
 		self.label2=tk.Label(self.labelFrame,text="For Genetic Algorithm",bg=Color.rgbToHex(0,90,109),fg=Color.white,font=("Arial", 25))
 		self.label2.pack()
@@ -85,7 +92,6 @@ class MainPage(tk.Frame):
 		for button in [self.button5,self.button4,self.button3,self.button2,self.button1]:
 			button.config(bg=Color.rgbToHex(1,45,54),padx=40,pady=10,font=("Arial", 15),fg=Color.white)
 			button.pack(pady=10)
-
 
 class BasePageTemplate(tk.Frame):
 	def __init__(self,parent:tk.Frame,controllerFrame:tk.Tk,title,backcommand,*arg,**kwarg):
@@ -109,26 +115,75 @@ class BasePageTemplate(tk.Frame):
 class EvolutionSimPage(BasePageTemplate,Evolution):
 	def backbutton(self):
 		self.controllerFrame.show_frame(MainPage)
+		
+	def configbutton(self):
+		self.controllerFrame.show_frame(ConfigPage)
+
+	def feedForwardThread(self):
+		self.feedthread=threading.Thread(target=self.FeedForward)
+		self.feedthread.start()
+
+	def FeedForward(self):
+		tmp_flag=0
+		print("Thread Started")
+		
+		population=None
+		if(StatusWidget.initialize==False):
+			population=[Genome(size=self.genome_size) for i in range(self.population_size)]
+		
+		for gen in range(self.max_generation):
+			# print(gen)
+			
+			self.graphFrame.locGraph.clearPoints()
+			self.refreshLocation()
+			self.introducingPopulation(population)
+			self.graphFrame.locGraph.initPoints()
+			for steps in range(self.step_per_gen):
+				# print(steps)
+				# one day of creature life
+				for creature in Creature.envLoc:
+					creature.grow()
+				# print("Day",steps,"completed")
+				# map updation
+				self.graphFrame.locGraph.clearPoints()
+				self.graphFrame.locGraph.initPoints()
+				# self.graphFrame.locGraph.update()
+				# print("Cleared map")
+				# sleep(0.05)
+				self.statusBox.parameter_current_gen.text.set(str(gen+1))
+				self.statusBox.parameter_day_count.text.set(str(steps+1))
+				# print("updated status",self.statusBox.button_play_pause.toggle_flag)
+				if(self.statusBox.button_play_pause.toggle_flag==True):
+					tmp_flag=1
+					return
+				# print("not paused")
+			if(tmp_flag==1):
+				return
+			# after generation is over 
+			self.terminateUnfit(SelectionCriteria=self.selectionCriteria2)
+			population=self.repopulate([i.getGenome() for i in Creature.envLoc])
+            
 
 	def __init__(self,parent:tk.Frame,controllerFrame:tk.Tk,*arg,**kwarg):
 		BasePageTemplate.__init__(self,parent,controllerFrame,"Evolution Simulator",self.backbutton,*arg,**kwarg)
 		self.configure(padx=10,pady=10)
+		self.controllerFrame=controllerFrame
 
-		Evolution.__init__(self,SimParam())
+		Evolution.__init__(self)
 		# Upper World Frame
-		graphStatusFrame=tk.Frame(self.mainFrame,bg=Color.dark_gray)
-		graphStatusFrame.pack(side=tk.TOP,fill=tk.X)
+		self.graphStatusFrame=tk.Frame(self.mainFrame,bg=Color.dark_gray)
+		self.graphStatusFrame.pack(side=tk.TOP,fill=tk.X)
 
 		# World
-		graphFrame=LocWidget(graphStatusFrame,Creature.envLoc,height=500,width=500,mat_size=self.world_size,title="World Map")
-		graphFrame.pack(side=tk.RIGHT)
+		self.graphFrame=LocWidget(self.graphStatusFrame,Creature.envLoc,height=500,width=500,mat_size=self.world_size,title="World Map")
+		self.graphFrame.pack(side=tk.RIGHT)
 		# Status
-		statusBox=StatusWidget(graphStatusFrame,bg=Color.light_green)
-		statusBox.pack(side=tk.LEFT,expand=True,fill=tk.BOTH)
+		self.statusBox=StatusWidget(self.graphStatusFrame,self,bg=Color.rgbToHex(0,90,109))
+		self.statusBox.pack(side=tk.LEFT,expand=True,fill=tk.BOTH)
 
 		# Graph
-		genGraph=GraphWidget(self.mainFrame,bg=Color.aqua)
-		genGraph.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
+		self.genGraph=GraphWidget(self.mainFrame,bg=Color.aqua)
+		self.genGraph.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
 
 class ConfigPage(BasePageTemplate,tk.Frame):
 	def backbutton(self):
@@ -170,4 +225,5 @@ class ThemePage(BasePageTemplate,tk.Frame):
 
 if(__name__=="__main__"):	
 	app=Simulator()
+	
 	app.mainloop()

@@ -11,27 +11,28 @@ from color import Color
 
 class ToggleButtonWidget(tk.Button):
 
-    def __init__(self,parent,text1:str="",iconpath1:str=None,text2:str="",iconpath2:str=None,icon_side:str=tk.LEFT,*arg,**kwarg):
+    def __init__(self,parent,command,text1:str="",iconpath1:str=None,text2:str="",iconpath2:str=None,icon_side:str=tk.LEFT,*arg,**kwarg):
         self.image1=tk.PhotoImage(file=iconpath1)
         self.image2=tk.PhotoImage(file=iconpath2)
         self.text=tk.StringVar()
+        self.userfunction=command
         self.text.set(text1)
         self.text1=text1
         self.text2=text2
         tk.Button.__init__(self,parent,textvariable=self.text,image=self.image1,compound=icon_side,command=self.toggle,*arg,**kwarg,bd=0,relief=tk.SUNKEN)
         # tk.Button.__init__(self,parent,text="hello",*arg,**kwarg)
         
-        self.toggle=True
+        self.toggle_flag=True
 
     def toggle(self):
-        # pass
-        if(self.toggle==True):
-            self.toggle=False
+        self.userfunction()
+        if(self.toggle_flag==True):
+            self.toggle_flag=False
             self.config(image=self.image2)
             self.text.set(self.text2)
 
         else:
-            self.toggle=True
+            self.toggle_flag=True
             self.config(image=self.image1)
             self.text.set(self.text1)
 

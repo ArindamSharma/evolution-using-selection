@@ -112,7 +112,7 @@ class NeuralNetwork():
         conditionx=doubt_location.x>=0 and doubt_location.x<self.simpara.world_size
         conditiony=doubt_location.y>=0 and doubt_location.y<self.simpara.world_size
         if(conditionx==False or conditiony==False):
-            print("outside world",self.body.id)
+            ##print("outside world",self.body.id)
             return False
         # Step 2 
         for creature in self.body.envLoc:
@@ -129,47 +129,47 @@ class NeuralNetwork():
     def mover(self)->None:
         # print(self.body.id,self.body.direction,"move right",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.RIGHT)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
 
     def movel(self)->None:
         # print(self.body.id,self.body.direction,"move left",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.LEFT)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
         
     def movef(self)->None:
         # print(self.body.id,self.body.direction,"move forward",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.FRONT)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
 
     def moveb(self)->None:
         # print(self.body.id,self.body.direction,"move backward",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.BACK)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
 
     def moverand(self)->None:        
         # print(self.body.id,self.body.direction,"move random",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,randint(-7,7))
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
 
     def turnR90(self)->None:
         # print(self.body.id,self.body.direction,"Turn Right 90 ")
@@ -190,38 +190,38 @@ class NeuralNetwork():
     def moveE(self)->None:
         # print(self.body.id,self.body.direction,"move East",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.EAST,False)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
 
     def moveW(self)->None:
         # print(self.body.id,self.body.direction,"move West",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.WEST,False)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
         
     def moveN(self)->None:
         # print(self.body.id,self.body.direction,"move North",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.NORTH,False)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
 
     def moveS(self)->None:
         # print(self.body.id,self.body.direction,"move South",self.body.location,end=",")
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.SOUTH,False)
-        print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
-            print(doubt_location,end="")
-        print()
+            ##print(doubt_location,end="")
+        ##print()
 
     ACTION={
         # '''output range of sensory neurons is from -1.0 - 1.0'''
