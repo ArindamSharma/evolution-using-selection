@@ -1,7 +1,5 @@
 from random import randint
 
-from neurons import InnerNeuron
-
 class Gene:
     """Gene Consist of 8 HexaDeciamal value
     here one Gene represent a Connection of neuron"""

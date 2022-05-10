@@ -1,49 +1,99 @@
 # import neuralnetwork as nn
 # from neurons import SensorNeuron,ActionNeuron,InnerNeuron,Connection,Weight
-from genome import Genome
+# from neuralnet import NeuralNet
 from encode import Encode,Decode
 from random import randint
-from neuralnet import NeuralNet
+from neuralnetworkv2 import NeuralNetwork
+from coordinate import Coordinate
+from compass import Compass
 
 class Creature:
-    envLoc={}
-    direction={
-        0:"N",
-        1:"NE",
-        2:"E",
-        3:"EW",
-        4:"W",
-        5:"WS",
-        6:"S",
-        7:"SE",
-    }
+    envLoc:list=[]
+    
     def resetEnvLoc()->None:
         '''Clears out the Locations of Creature'''
         Creature.envLoc.clear()
 
-    def __init__(self,genome:Genome,location:tuple,inner_neuron:int=1):
+    def __init__(self,genome,location:Coordinate,simparam):
         '''Takes Genome for creation of Creature and Location where it exist and other Creatures Location Pointer'''
-        Creature.envLoc[location]=self
+        self.id=len(Creature.envLoc)
+        Creature.envLoc.append(self)
         self.genome=genome
-        self.brain=NeuralNet(Decode(self.genome).linkArray)
         self.age=0
         self.location=location
         self.birthloc=location
-        self.current_direction=randint(0,7)
+        self.direction=Compass()
+        self.lastmovex=None
+        self.lastmovey=None
+
+        self.r=None
+        self.g=None
+        self.b=None
+        # self.brain=NeuralNet(Decode(self.genome).linkArray)
+        self.brain=NeuralNetwork(self,Decode(self.genome).linkArray,simparam)
+        # print(self.r,self.g,self.b)
     
     def grow(self):
-        self.age+=1
-        pass
-
-    def brainWiring(self):
-        pass
+        self.brain.feedForward()
+        # print(len(self.envLoc))
 
     def crossover(self,creature):
         pass
 
-    def getGenome(self)->Genome:
-        return Encode(self.brain.linkArray).genome
+    def getGenome(self)->None:
+        '''Updating neural network adjacency list and extracting genome'''
+        self.brain.updateWeight()
+        return Encode(self.brain.getConnectionList()).genome
+
+    def __str__(self) -> str:
+        tmp="Age:" + str(self.age)+"\n"
+        tmp+=str(self.location)+"\n"
+        tmp+="Genome: " + str(self.genome)+"\n"
+        tmp+= str(self.direction)+"\n"
+        return tmp
+    def __repr__(self) -> str:
+        return str(self.location)
 
 if __name__=="__main__":
-    a=Creature(Genome(size=4),(4,3),3)
-    print(a.brain)
+    from evolution import SimParam
+    from genome import Genome
+    # tmp_genome="1c994da65b92775ae59e2194f12ba069"
+    # print(tmp_genome)
+    a=Creature(Genome(size=4),Coordinate(4,3),SimParam(inner_neuron=1))
+    b=Creature(Genome(size=4),Coordinate(40,30),SimParam(inner_neuron=1))
+    print(Creature.envLoc)
+    print("-----------------------------")
+    print(a)
+    # print(a.brain.linklist)
+    print(a.brain.sensor)
+    print(a.brain.inner)
+    print(a.brain.action)
+    print()
+    print(b)
+    print(b.brain.sensor)
+    print(b.brain.inner)
+    print(b.brain.action)
+    print("-----------------------------")
+    
+    
+    print("------------Feed Forward Starts----------------")
+    # a.grow()
+    for _ in range(10):
+        a.brain.feedForward()
+        b.brain.feedForward()
+    # print(a.brain.updateWeight())
+    # print(a.brain.linklist)
+    print("------------Feed Forward ends----------------")
+    
+    print("-----------------------------")
+    print(a)
+    # print(a.brain.linklist)
+    print(a.brain.sensor)
+    print(a.brain.inner)
+    print(a.brain.action)
+    print()
+    print(b)
+    print(b.brain.sensor)
+    print(b.brain.inner)
+    print(b.brain.action)
+    print("-----------------------------")

@@ -1,4 +1,4 @@
-from genome import Gene
+from genome import Gene, Genome
 # from neurons import SensorNeuron,ActionNeuron,InnerNeuron
 from weight import Weight
 class Connection():
@@ -67,8 +67,13 @@ class Connection():
         return "Connection : "+" ".join(str(i) for i in [self.source_id,self.source_add,self.dest_id,self.dest_add,self.weight])
 
 class ConnectionArray():
-    def __init__(self,linkArray:list[Connection])->None:
-        self.links=linkArray
+    def __init__(self,linkArray:list[Connection]=None,genome:Genome=None)->None:
+        if(linkArray==None and genome !=None):
+            self.links=[]
+            for gene in genome:
+                self.links.append(Connection(gene))
+        elif(genome==None):
+            self.links=linkArray
 
     def find(self,__link:Connection)->Connection:
         for i in self.links:

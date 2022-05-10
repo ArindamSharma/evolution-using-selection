@@ -69,7 +69,7 @@ class StatusWidget(tk.Frame):
 		self.buttomFrameMiddle=tk.Frame(self.buttomFrame)
 		self.buttomFrameMiddle.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
 
-		self.button2=tk.Button(self.buttomFrameMiddle,text="Update Parameter")
+		self.button2=tk.Button(self.buttomFrameMiddle,text="Apply Parameter")
 		self.button2.pack(fill=tk.X)
 		self.button2=tk.Button(self.buttomFrameMiddle,text="Export")
 		self.button2.pack(fill=tk.X)

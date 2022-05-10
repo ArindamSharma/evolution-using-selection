@@ -17,9 +17,7 @@ class Decode():
     """Genome Decoding 
     """
     def __init__(self,genome:Genome):
-        self.linkArray:ConnectionArray=[]
-        for i in genome.genome:
-            self.linkArray.append(Connection(i))
+        self.linkArray=ConnectionArray([Connection(i) for i in genome.genome])
     
     def __str__(self)->str:
         return str(self.linkArray)

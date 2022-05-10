@@ -6,6 +6,9 @@ class Weight():
 
     def getOriginalValue(self)->int:
         return int(self.value*Weight.CONSTANT)
+    
+    def __eq__(self, __o: object) -> bool:
+        self.weight=__o.weight
 
     def __str__(self) -> str:
         return str(self.value)

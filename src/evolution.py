@@ -3,9 +3,12 @@ from genome import Genome
 from random import randint,shuffle
 from crossover import Crossover
 from mutation import Mutation
+from coordinate import Coordinate
+from connection import ConnectionArray,Connection
 
-class Evolution():
+class SimParam():
     def __init__(self,population_size=100,genome_size=4,world_size=128, step_per_gen=300,mutation=0.0,inner_neuron=1):
+        
         self.population_size=population_size
         self.genome_size=genome_size
         self.step_per_gen=step_per_gen
@@ -14,8 +17,19 @@ class Evolution():
         
         self.world_size=world_size
         self.population=0
-        self.unusedLocation=[]
-        self.usedLocation={}
+
+class Evolution():
+    def __init__(self,simparam:SimParam):
+        self.simparam=simparam
+        self.population_size=simparam.population_size
+        self.genome_size=simparam.genome_size
+        self.step_per_gen=simparam.step_per_gen
+        self.mituation_rate=simparam.mituation_rate
+        self.inner_neuron=simparam.inner_neuron
+        
+        self.world_size=simparam.world_size
+        self.population=simparam.population
+        self.unusedLocation:list[Coordinate]=[]
 
         self.survival_rate=None
         self.diversity=None
@@ -28,27 +42,29 @@ class Evolution():
         if(creatureGenomeList==None):    
             for i in range(self.population_size):
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc,self.inner_neuron)    
+                # self.usedLocation[loc]=Creature(Genome(size=self.genome_size),loc,self.simparam)    
+                Creature(Genome(size=self.genome_size),loc,self.simparam)    
         else:
             for creatureGenome in creatureGenomeList:
                 loc=self.occupyRandomEmptyLocation()
-                self.usedLocation[loc]=Creature(creatureGenome,loc,self.inner_neuron)    
+                # self.usedLocation[loc]=Creature(creatureGenome,loc,self.simparam)    
+                Creature(creatureGenome,loc,self.simparam)    
 
     def grow(self)->None:
         ''' after this loop creature have aged 1 unit'''
-        for creature in self.usedLocation:
-            self.usedLocation[creature].grow()# to iteratrate once
+        for creature in Creature.envLoc:
+            creature.grow()# to iteratrate once
     
     def terminateUnfit(self,SelectionCriteria:any)->None:
         '''this function remove the creature which are unfit for the population using fitness function passed '''
         creatureToRemove=[]
-        for creature in self.usedLocation:
-            if (self.fitnessScore(self.usedLocation[creature],SelectionCriteria)==False):
+        for creature in Creature.envLoc:
+            if (self.fitnessScore(creature,SelectionCriteria)==False):
                 creatureToRemove.append(creature)
 
         # print("Creature to delete",len(creatureToRemove))
         for creature in creatureToRemove:
-            del self.usedLocation[creature]
+            Creature.envLoc.remove(creature)
 
     def repopulate(self,oldCreaturesGenomeList:list[Genome])->list[Genome]:
         '''this function will re-create creature for the remaining creature genome based on fitness function and return new Creatures Genome List'''
@@ -96,23 +112,23 @@ class Evolution():
         self.unusedLocation.clear()# clearing the world unsued location
         for i in range(self.world_size):
             for j in range(self.world_size):
-                self.unusedLocation.append((i,j))
-        self.usedLocation.clear()# clearing the used location
+                self.unusedLocation.append(Coordinate(i,j))
+        # self.usedLocation.clear()# clearing the used location
         self.population=0
         # print("Location Refreshed")
 
-    def getRandomEmptyLocation(self)-> tuple:
+    def getRandomEmptyLocation(self)-> Coordinate:
         '''This function return any random empty location '''
         upperlimit=(self.world_size*self.world_size)-self.population-1
         self.populationExceedCheck()
         return self.unusedLocation[randint(0,upperlimit)]
 
-    def markLocationAsUsed(self,coordinate:tuple)->tuple:
+    def markLocationAsUsed(self,coordinate:Coordinate)->Coordinate:
         self.population+=1
         self.unusedLocation.remove(coordinate)
         return coordinate
 
-    def occupyRandomEmptyLocation(self)->tuple:
+    def occupyRandomEmptyLocation(self)->Coordinate:
         return self.markLocationAsUsed(self.getRandomEmptyLocation())
 
     def populationExceedCheck(self)->None:
@@ -132,7 +148,7 @@ class Evolution():
             # print(self.usedLocation,[i.getGenome() for i in self.usedLocation.values()])
             self.terminateUnfit(SelectionCriteria=self.selectionCriteria1)
             # print(self.usedLocation,[i.getGenome() for i in self.usedLocation.values()])
-            population=self.repopulate([i.getGenome() for i in self.usedLocation.values()])
+            population=self.repopulate([i.getGenome() for i in Creature.envLoc])
         print()
 
     def selectionCriteria1(self,creature:Creature)->bool:
@@ -159,7 +175,7 @@ class Evolution():
         +"================================"
 
 if(__name__=="__main__"):
-    evo=Evolution(population_size=47,genome_size=4,world_size=10,step_per_gen=300,mutation=0.1)
+    evo=Evolution(SimParam(population_size=47,genome_size=4,world_size=10,step_per_gen=300,mutation=0.1))
     print(repr(evo))
     
     evo.testGenEvolve(100)
