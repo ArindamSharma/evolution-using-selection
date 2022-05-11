@@ -36,8 +36,8 @@ class LocCanvas(tk.Canvas):
         self.update()
 
     def clearPoints(self)->None:
-        for i in LocCanvas.pointArray:
-            self.delete(LocCanvas.pointArray[i])
+        # for i in LocCanvas.pointArray:
+        #     self.delete(LocCanvas.pointArray[i])
         LocCanvas.pointArray.clear()
         self.delete(tk.ALL)
 

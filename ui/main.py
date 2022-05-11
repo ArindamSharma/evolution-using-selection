@@ -41,8 +41,8 @@ class Simulator(tk.Tk):
 			self.frames[F].grid(row=0,column=0,sticky=tk.NSEW)
 			# print(self.frames[F])
 
-		# self.show_frame(MainPage)
-		self.show_frame(EvolutionSimPage)
+		self.show_frame(MainPage)
+		# self.show_frame(EvolutionSimPage)
 		
 		# self.protocol("WM_DELETE_WINDOW", self.window_exit)
 	

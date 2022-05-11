@@ -15,9 +15,9 @@ class Coordinate():
         return self.x==__o.x and self.y==__o.y
         
     def __add__(self,__o:object):
-        self.x+=__o.x
-        self.y+=__o.y
-        return self
+        __o.x+=self.x
+        __o.y+=self.y
+        return __o
 
     def __hash__(self) -> int:
         return hash(str(self.x)+str(self.y))

@@ -127,97 +127,106 @@ class NeuralNetwork():
 
 
     def mover(self)->None:
-        # print(self.body.id,self.body.direction,"move right",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move right",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.RIGHT)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
 
     def movel(self)->None:
-        # print(self.body.id,self.body.direction,"move left",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move left",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.LEFT)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
         
     def movef(self)->None:
-        # print(self.body.id,self.body.direction,"move forward",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move forward",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.FRONT)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
 
     def moveb(self)->None:
-        # print(self.body.id,self.body.direction,"move backward",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move backward",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.BACK)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
 
     def moverand(self)->None:        
-        # print(self.body.id,self.body.direction,"move random",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move random",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,randint(-7,7))
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
 
     def turnR90(self)->None:
-        # print(self.body.id,self.body.direction,"Turn Right 90 ")
+        ##print(self.body.id,self.body.direction,"Turn Right 90 ")
         self.body.direction.turn(2)
 
     def turnL90(self)->None:
-        # print(self.body.id,self.body.direction,"Turn Left 90 ")
+        ##print(self.body.id,self.body.direction,"Turn Left 90 ")
         self.body.direction.turn(-2)
         
     def turnR45(self)->None:
-        # print(self.body.id,self.body.direction,"Turn Right 45 ")
+        ##print(self.body.id,self.body.direction,"Turn Right 45 ")
         self.body.direction.turn(1)
 
     def turnL45(self)->None:
-        # print(self.body.id,self.body.direction,"Turn Left 90 ")
+        ##print(self.body.id,self.body.direction,"Turn Left 90 ")
         self.body.direction.turn(1)
         
     def moveE(self)->None:
-        # print(self.body.id,self.body.direction,"move East",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move East",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.EAST,False)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
 
     def moveW(self)->None:
-        # print(self.body.id,self.body.direction,"move West",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move West",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.WEST,False)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
         
     def moveN(self)->None:
-        # print(self.body.id,self.body.direction,"move North",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move North",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.NORTH,False)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")
         ##print()
 
     def moveS(self)->None:
-        # print(self.body.id,self.body.direction,"move South",self.body.location,end=",")
+        ##print(self.body.id,self.body.direction,"move South",self.body.location,end=",")
+        
         doubt_location=self.body.direction.getNextLocation(self.body.location,Compass.SOUTH,False)
-        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location))
+        ##print(self.body.id,doubt_location,self.locationchecker(doubt_location),self.body.location)
         if(self.locationchecker(doubt_location)):
             self.body.location=doubt_location
             ##print(doubt_location,end="")

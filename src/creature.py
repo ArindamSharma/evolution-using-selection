@@ -47,6 +47,7 @@ class Creature:
 
     def __str__(self) -> str:
         tmp="Age:" + str(self.age)+"\n"
+        tmp="ID:" + str(self.id)+"\n"
         tmp+=str(self.location)+"\n"
         tmp+="Genome: " + str(self.genome)+"\n"
         tmp+= str(self.direction)+"\n"
@@ -55,12 +56,13 @@ class Creature:
         return str(self.location)
 
 if __name__=="__main__":
-    from evolution import SimParam
     from genome import Genome
+    from evolution import Evolution
     # tmp_genome="1c994da65b92775ae59e2194f12ba069"
     # print(tmp_genome)
-    a=Creature(Genome(size=4),Coordinate(4,3),SimParam(inner_neuron=1))
-    b=Creature(Genome(size=4),Coordinate(40,30),SimParam(inner_neuron=1))
+    x=Evolution()
+    a=Creature(Genome(size=4),Coordinate(4,3),x)
+    b=Creature(Genome(size=4),Coordinate(40,30),x)
     print(Creature.envLoc)
     print("-----------------------------")
     print(a)
@@ -78,7 +80,7 @@ if __name__=="__main__":
     
     print("------------Feed Forward Starts----------------")
     # a.grow()
-    for _ in range(10):
+    for _ in range(100):
         a.brain.feedForward()
         b.brain.feedForward()
     # print(a.brain.updateWeight())

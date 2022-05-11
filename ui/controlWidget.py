@@ -190,7 +190,7 @@ class StatusWidget(tk.Frame):
 		self.buttomFrameRight=tk.Frame(self.buttomFrame)
 		self.buttomFrameRight.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
-		self.button_play_pause=ToggleButtonWidget(self.buttomFrameRight,self.playpause,iconpath2="../img/icon/pause-button-100.png",iconpath1="../img/icon/play-button-100.png")
+		self.button_play_pause=ToggleButtonWidget(self.buttomFrameRight,self.playpause,iconpath2="../img/icon/stop-circled-100.png",iconpath1="../img/icon/play-button-100.png")
 		self.button_play_pause.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
 class parameter(tk.Frame):
