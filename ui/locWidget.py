@@ -71,7 +71,7 @@ class LocWidget(tk.Frame):
         self.label.pack(side=tk.TOP,fill=tk.X)
 
         # self.env=None
-        self.locGraph=LocCanvas(self,height,width,bg=Color.white,mat_size=mat_size,dot_size=4)
+        self.locGraph=LocCanvas(self,height,width,bg=Color.white,mat_size=mat_size,dot_size=5)
         self.locGraph.pack()
         # self.locGraph.initPoints()
 

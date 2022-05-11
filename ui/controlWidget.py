@@ -15,11 +15,7 @@ from buttonWidget import ToggleButtonWidget
 
 class StatusWidget(tk.Frame):
 	initialize=False
-	def applybutton(self):
-		StatusWidget.initialize=True
-		self.evoFrame.graphFrame.locGraph.clearPoints()
-		self.evoFrame.refreshLocation()
-		# print(len(Creature.envLoc))
+	def updateEvoParamFromController(self):
 		self.evoFrame.max_generation=int(self.parameter_max_gen.userinput.get())
 		self.evoFrame.world_size=int(self.parameter_world_size.userinput.get())
 		self.evoFrame.population_size=int(self.parameter_population_size.userinput.get())
@@ -28,6 +24,13 @@ class StatusWidget(tk.Frame):
 		self.evoFrame.mutation_rate=float(self.parameter_mutation_rate.userinput.get())
 		self.evoFrame.inner_neuron=int(self.parameter_inner_neuron.userinput.get())
 
+
+	def applybutton(self):
+		StatusWidget.initialize=True
+		self.evoFrame.graphFrame.locGraph.clearPoints()
+		self.evoFrame.refreshLocation()
+		# print(len(Creature.envLoc))
+		self.updateEvoParamFromController()
 		self.evoFrame.introducingPopulation()
 		self.evoFrame.graphFrame.locGraph.initPoints()
 		# self.evoFrame.graphFrame.locGraph.update()
@@ -67,6 +70,7 @@ class StatusWidget(tk.Frame):
 				self.button_save,
 			]:
 				i.config(state=tk.DISABLED)
+			self.updateEvoParamFromController()
 			self.evoFrame.feedForwardThread()
 		else:
 			print("Pause")

@@ -160,7 +160,7 @@ class EvolutionSimPage(BasePageTemplate,Evolution):
 			if(tmp_flag==1):
 				return
 			# after generation is over 
-			self.terminateUnfit(SelectionCriteria=self.selectionCriteria2)
+			self.terminateUnfit(SelectionCriteria=self.selectionCriteria1)
 			population=self.repopulate([i.getGenome() for i in Creature.envLoc])
             
 
@@ -182,7 +182,7 @@ class EvolutionSimPage(BasePageTemplate,Evolution):
 		self.statusBox.pack(side=tk.LEFT,expand=True,fill=tk.BOTH)
 
 		# Graph
-		self.genGraph=GraphWidget(self.mainFrame,bg=Color.aqua)
+		self.genGraph=GraphWidget(self.mainFrame,self,bg=Color.aqua)
 		self.genGraph.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
 
 class ConfigPage(BasePageTemplate,tk.Frame):

@@ -51,6 +51,9 @@ class Evolution():
             if (self.fitnessScore(creature,SelectionCriteria)==False):
                 creatureToRemove.append(creature)
 
+        self.survival_rate=(self.population_size-len(creatureToRemove))/self.population_size
+        self.survival_rate*=100
+        print("Survivers :",self.survival_rate,"%")
         # print("Creature to delete",len(creatureToRemove))
         for creature in creatureToRemove:
             Creature.envLoc.remove(creature)
@@ -72,7 +75,7 @@ class Evolution():
             x=randint(0,len(parentAllCombination)-1)
             tmppair=parentAllCombination.pop(x)
             # print(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover.SINGLEPOINT,geneCrossover=True).offspring,Mutation(Crossover(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover.SINGLEPOINT,charCrossover=True).offspring,self.mituation_rate,Mutation.RANDOMSWAP).genome,)
-            newCreatureGenomeList.append(Mutation(Crossover(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover.SINGLEPOINT,charCrossover=True).offspring,self.mutation_rate,Mutation.RANDOMSWAP).genome)
+            newCreatureGenomeList.append(Mutation(Crossover(oldCreaturesGenomeList[tmppair[0]],oldCreaturesGenomeList[tmppair[1]],Crossover.SINGLEPOINT,geneCrossover=True).offspring,self.mutation_rate,Mutation.RANDOMSWAP).genome)
         # print(newCreatureGenomeList)
         return newCreatureGenomeList
         # self.introducingPopulation(newCreatureGenomeList)
